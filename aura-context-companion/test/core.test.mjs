@@ -12,3 +12,4 @@ test('model source ids verified',()=>assert.throws(()=>validateModelDraft(JSON.s
 test('exact evidence survives validation',()=>assert.match(validateModelDraft(JSON.stringify({items:seed.events.map(e=>({sourceId:e.id,text:e.text}))}),seed.events),/AI-organised/));
 
 test('model cannot silently omit confirmed events',()=>assert.throws(()=>validateModelDraft(JSON.stringify({items:[{sourceId:'e1',text:seed.events[0].text}]}),seed.events),/evidence/));
+

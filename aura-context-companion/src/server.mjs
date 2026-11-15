@@ -34,6 +34,7 @@ const server=http.createServer(async(req,res)=>{
   const pathname=new URL(req.url,'http://localhost').pathname;
   const file=resolve(join(root,pathname==='/'?'index.html':pathname));
   if(!file.startsWith(root+'/')) return json(403,{error:'Forbidden.'});
-  try {const data=await readFile(file);res.writeHead(200,{'Content-Type':({'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml'})[extname(file)]||'application/octet-stream'});res.end(data);} catch {json(404,{error:'Not found.'});}
+  try {const data=await readFile(file);res.writeHead(200,{'Content-Type':({'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.webmanifest':'application/manifest+json'})[extname(file)]||'application/octet-stream'});res.end(data);} catch {json(404,{error:'Not found.'});}
 });
 server.listen(Number(process.env.PORT||3000),'127.0.0.1',()=>console.log('Aura is running on http://127.0.0.1:'+Number(process.env.PORT||3000)+'. Live Meta calls: '+(enabled?'enabled':'disabled')));
+

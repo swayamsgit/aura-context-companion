@@ -1,63 +1,42 @@
 # Aura: contextual memory companion
 
-A non-clinical software prototype: manually saved people and context, confirmed daily events, evidence-linked recall and a human-reviewed caregiver check-in. Built for the Meta Global AI Developer Hackathon, Indie Developer / Build for Your World.
+A calm, free, offline-capable web app for keeping the people in your life and the small moments of your day in one place, with a caregiver check-in you review before sharing. Built for the Meta AI Developer Hackathon (Indie Developer, "build for your world"), then finished as a usable product.
+
+**Live app:** https://aura-companion-5hf.pages.dev
+
+## What it does
+
+- **People:** save a name, relationship, one everyday detail and an optional photo. You choose who you are with; Aura never identifies anyone.
+- **Today:** time-aware greeting, context card with its source, read-aloud, recent notes and today's routine.
+- **Routine:** everyday activities in time order with done and not-done-yet states (ticks reset daily).
+- **Daily notes:** type or dictate, search, and select which notes go into a check-in.
+- **Caregiver check-in:** evidence-linked draft (every line carries its note ID), a review gate, then copy, open in WhatsApp or email with the text filled in, or print. Aura sends nothing itself.
+- **Comfort:** normal, large and extra-large text, high contrast, mobile layout, keyboard and screen-reader labels.
+- **Your data:** stored only in your browser. Download or restore a JSON backup, delete everything in one click. Installable as an app and works offline after first load.
+
+## What it does not do
+
+No smart glasses or wearables, face recognition, emotion or confusion detection, medication advice, diagnosis, emergency monitoring, accounts, cloud sync or encryption. It is not a medical device and has had no clinical testing. Notes mentioning medication or health terms are blocked by a simple keyword check, which is a safeguard and not clinical safety.
 
 ## Run
 
-Requires Node.js 20 or newer. No dependencies are needed.
+Needs Node.js 20+. No dependencies.
 
 ```sh
 npm test
-npm start
+npm start      # http://127.0.0.1:3000
 ```
 
-Open http://127.0.0.1:3000 . Local context cards, journal and check-in drafts work immediately with fictional example data.
+The `public/` folder is a static site and can be hosted anywhere (it is deployed on Cloudflare Pages).
 
-## Meta Model API
+## Optional Meta model API (off by default)
 
-The optional Node backend calls `https://api.meta.ai/v1/chat/completions` using `muse-spark-1.3`, per Meta's docs checked November 4, 2026:
-
-- https://dev.meta.ai/docs/quickstart
-- https://dev.meta.ai/docs/cookbook/quickstart-chat-completions
-
-Read `.env.example`. Export the environment variables in your terminal or use a deployment provider's secret store. The server does not load `.env` files automatically.
-
-```sh
-# Set MODEL_API_KEY through your secret manager, not source code or browser storage.
-export META_LIVE_ENABLED=true
-export META_MAX_CALLS=1
-npm start
-```
-
-A valid Meta account, billing/access and key are required. `META_MAX_CALLS` is a process-local request-count guard, **not a dollar or token budget**. Failed calls count too; restarting the server resets it. Never enable it without an approved budget and appropriate provider billing controls. Calls are off by default. No live Meta inference has been verified in this version; automated provider tests use stubs. Never claim stubbed or local output is live AI.
-
-The frontend sends only selected event IDs, times and text, and only after the cloud-consent checkbox is selected. The server rejects medical/medication keywords, limits input and output sizes, validates source IDs, and rejects changes to exact confirmed event text. These are prototype safeguards, not proof of medical safety or full prompt-injection resistance. The model is used to organise evidence, not generate new facts or clinical advice.
-
-## Implemented
-
-- Add/remove people and manually choose a known person.
-- Source-linked contextual prompt, with an explicit unknown state.
-- Optional browser speech synthesis, dependent on device support.
-- Add/select/remove daily events, stored on the same browser.
-- Local evidence draft with event IDs.
-- Review-before-copy, invalidated when notes or draft change.
-- Meta API adapter, server-side key, consent and call-count guard.
-- Unit tests and browser-interaction checks.
-
-## Not implemented or validated
-
-No Ray-Ban integration, Bluetooth sensor interception, continuous recording, facial recognition, confusion or emotion detection, local Llama/ExecuTorch inference, encrypted database, WhatsApp Business sending, medication advice, clinical validation or emergency monitoring.
-
-The original wearable/edge-AI concept is a future design direction. The actual prototype is cloud-assisted only when the optional Meta backend is enabled. It is not fully offline AI.
+`src/server.mjs` can call Meta's chat completions API to reorder check-in lines. It is off unless you run the Node server with `META_LIVE_ENABLED=true`, `MODEL_API_KEY` and `META_MAX_CALLS`. See `.env.example`. `META_MAX_CALLS` is a request-count guard, not a spend limit. The model may only reorder exact confirmed note text; anything rewritten is rejected. This path has never been run against the live API (automated tests use stubs), and the hosted site does not use it. Never put a key in browser code.
 
 ## Privacy and safety
 
-**Use fictional information only.** Browser-local notes are unencrypted, not synchronized and can be lost when storage is cleared. The server binds to localhost. It is not production hardened or intended for public hosting with an API key; add real authentication, quotas, TLS and storage controls before deployment. Do not put patient records or other sensitive data in this prototype. No message is sent to a caregiver by this app. It is not a medical device, does not diagnose or treat dementia and must not be used to decide medication, clinical care or whether someone is safe alone.
+Use everyday, low-sensitivity information. Browser storage is unencrypted and tied to one device and browser. Real patient records do not belong here. Do not use Aura to decide medication, treatment or whether someone is safe alone.
 
-## Original contributions
+## Tests
 
-All application code in `src/`, `public/` and `test/` was newly written for this prototype during the hackathon. The code uses Node.js standard APIs and browser APIs. Development used AI assistance. Fictional characters and events are demonstration data, not user or patient records. No hardware or clinical testing is represented.
-
-## Submission state
-
-Prepare a three-minute demo of the actual functions. Supply the public repository and video URLs only after checking their accessibility. Review all description claims, personal feedback ratings, contributors and organizer terms yourself before submitting.
+`npm test` runs unit tests for the core logic, backup validation, routine states, share links and the server's safety checks.

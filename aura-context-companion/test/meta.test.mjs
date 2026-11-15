@@ -24,3 +24,4 @@ test('rate limits reported without retrying billable calls', async () => {
 test('rejects empty output', async () => {
   await assert.rejects(metaCompletion({key:'test',messages:[],fetchImpl:async()=>({ok:true,json:async()=>({choices:[]})})}), /no usable text/);
 });
+

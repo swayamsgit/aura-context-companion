@@ -9,3 +9,4 @@ test('server serves UI and keeps API off without explicit configuration',async()
  const rejected=await fetch('http://127.0.0.1:3012/api/summary',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});assert.equal(rejected.status,503);
  }finally{server.kill();}
 });
+

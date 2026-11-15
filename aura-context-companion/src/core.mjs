@@ -35,3 +35,4 @@ export function validateModelDraft(raw,events) {
   if (new Set(obj.items.map(x=>x.sourceId)).size!==obj.items.length) throw Error('The AI duplicated an event.');
   return 'Daily check-in draft\n\n'+out.join('\n')+'\n\nAI-organised from manually entered notes. No health, mood or identity conclusions are made. Please review before sharing.';
 }
+

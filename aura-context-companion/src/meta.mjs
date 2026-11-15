@@ -26,3 +26,4 @@ export async function metaCompletion({messages, key, model = 'muse-spark-1.3', f
   if (typeof content !== 'string' || !content.trim()) throw new ProviderError('Meta returned no usable text.');
   return {text: content.trim(), model: data.model || model, usage: data.usage || null};
 }
+
